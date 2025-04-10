@@ -19,39 +19,54 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def plugin_manifest():
     return FileResponse("static/ai-plugin.json")
 
+def is_supported_image_format(content_type):
+    """判断图片类型是否支持"""
+    return any(fmt in content_type for fmt in ["jpeg", "jpg", "png"])
+
 def search_image_url(query):
-    """提取 Bing 第一张高清图 URL（使用 murl 字段）"""
+    """提取 Bing 上第一个符合要求的图片 URL（仅限 jpeg/jpg/png）"""
     headers = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/122.0.0.0 Safari/537.36"
-    ),
-    "Referer": "https://www.bing.com/"
-}
+        "User-Agent": (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+            "AppleWebKit/537.36 (KHTML, like Gecko) "
+            "Chrome/122.0.0.0 Safari/537.36"
+        ),
+        "Referer": "https://www.bing.com/"
+    }
     res = requests.get(f"https://www.bing.com/images/search?q={query}", headers=headers)
     soup = BeautifulSoup(res.text, "html.parser")
     items = soup.find_all("a", class_="iusc")
+
     for item in items:
         try:
             metadata = json.loads(item.get("m"))
             image_url = metadata.get("murl")
-            if image_url:
+            if not image_url:
+                continue
+
+            # 提前 HEAD 请求检查格式
+            head_res = requests.head(image_url, timeout=5)
+            content_type = head_res.headers.get("Content-Type", "")
+
+            if head_res.status_code == 200 and is_supported_image_format(content_type):
                 return image_url
         except Exception:
             continue
-    raise Exception("找不到有效的图片 URL")
+
+    raise Exception("找不到符合格式的图片 URL（仅支持 jpg/jpeg/png）")
 
 def download_image(image_url):
     """下载图片字节内容"""
     res = requests.get(image_url, stream=True, timeout=10)
     content_type = res.headers.get("Content-Type", "")
-    if res.status_code == 200 and res.headers.get("Content-Type", "").startswith("image"):
-        if any(fmt in content_type for fmt in ["jpeg", "jpg", "png"]):
+
+    if res.status_code == 200 and content_type.startswith("image"):
+        if is_supported_image_format(content_type):
             return res.content
         else:
             raise Exception(f"不支持的图片格式：{content_type}")
     raise Exception("图片下载失败或内容格式不对")
+
 
 def upload_to_imgbb(image_bytes, imgbb_api_key):
     """将图片上传至 imgbb 并返回图片 URL"""
