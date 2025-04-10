@@ -8,12 +8,12 @@
     "type": "user_http",
     "authorization_type": "bearer"
   },
-  "api": {
+ "api": {
     "type": "openapi",
-    "url": "https://your-domain.com/openapi.json",
+    "url": "https://your-subdomain.up.railway.app/openapi.json",
     "is_user_authenticated": true
   },
-  "logo_url": "https://your-domain.com/static/logo.png",
-  "contact_email": "you@example.com",
-  "legal_info_url": "https://your-domain.com/legal"
+  "logo_url": "https://your-subdomain.up.railway.app/static/logo.png",
+  "contact_email": "your@email.com",
+  "legal_info_url": "https://your-subdomain.up.railway.app/legal"
 }
