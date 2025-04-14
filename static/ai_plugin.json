@@ -1,19 +1,17 @@
 {
   "schema_version": "v1",
-  "name_for_model": "image_search_upload",
-  "name_for_human": "Image Search & Upload",
-  "description_for_model": "Search for an image from Bing and upload to imgbb. Returns a markdown image URL.",
-  "description_for_human": "Find an image by keyword and upload it to imgbb.",
+  "name_for_human": "Image Search",
+  "name_for_model": "image_search",
+  "description_for_human": "Search for an image and get a public link.",
+  "description_for_model": "Searches Bing for a product image and uploads to imgbb.",
   "auth": {
-    "type": "user_http",
-    "authorization_type": "bearer"
+    "type": "none"
   },
- "api": {
+  "api": {
     "type": "openapi",
-    "url": "https://your-subdomain.up.railway.app/openapi.json",
-    "is_user_authenticated": true
+    "url": "https://your-render-url.onrender.com/openapi.json"
   },
-  "logo_url": "https://your-subdomain.up.railway.app/static/logo.png",
-  "contact_email": "your@email.com",
-  "legal_info_url": "https://your-subdomain.up.railway.app/legal"
+  "logo_url": "https://your-render-url.onrender.com/static/logo.png",
+  "contact_email": "you@example.com",
+  "legal_info_url": "https://yourwebsite.com/legal"
 }
