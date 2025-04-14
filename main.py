@@ -15,6 +15,7 @@ app = FastAPI(
     title="Image Search & Upload API",
     description="Search image from Bing and upload to imgbb",
     version="1.0",
+    openapi_version="3.0.1",
     servers=[
         {"url": "https://image-search-plugin.onrender.com"}
     ]
