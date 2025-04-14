@@ -106,7 +106,7 @@ def get_image_url(product: str = Query(..., description="商品或关键词"), i
     try:
          # 如果请求参数中没有提供 imgbb_key，则从环境变量中读取
         if not imgbb_key:
-            imgbb_key = os.getenv("imgbb_key")
+            imgbb_key = os.getenv("IMGBB_API_KEY")
             if not imgbb_key:
                 raise ValueError("未提供 imgbb API 密钥，且环境变量中未设置 IMGBB_API_KEY")
                 
