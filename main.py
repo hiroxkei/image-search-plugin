@@ -11,7 +11,14 @@ from fastapi.staticfiles import StaticFiles
 import requests, json, base64, os
 from bs4 import BeautifulSoup
 
-app = FastAPI(title="Image Search & Upload API", description="Search image from Bing and upload to imgbb")
+app = FastAPI(
+    title="Image Search & Upload API",
+    description="Search image from Bing and upload to imgbb",
+    version="1.0",
+    servers=[
+        {"url": "https://image-search-plugin.onrender.com"}
+    ]
+)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
