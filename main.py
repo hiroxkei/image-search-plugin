@@ -106,3 +106,25 @@ def get_image_url(product: str = Query(..., description="商品或关键词"), i
         })
     except Exception as e:
         return JSONResponse(status_code=500, content={"status": "error", "message": str(e)})
+
+from fastapi.openapi.utils import get_openapi
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        routes=app.routes,
+    )
+    # 强制设定 OpenAPI 版本 & servers 字段
+    openapi_schema["openapi"] = "3.0.1"
+    openapi_schema["servers"] = [
+        {"url": "https://image-search-plugin.onrender.com"}
+    ]
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+# 应用新的 openapi 定义
+app.openapi = custom_openapi
