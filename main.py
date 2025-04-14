@@ -10,6 +10,7 @@ from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 import requests, json, base64, os
 from bs4 import BeautifulSoup
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
     title="Image Search & Upload API",
@@ -19,6 +20,14 @@ app = FastAPI(
     servers=[
         {"url": "https://image-search-plugin.onrender.com"}
     ]
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 允许所有来源访问（可以改为指定域名）
+    allow_credentials=True,
+    allow_methods=["*"],  # 允许所有请求方法：GET、POST、OPTIONS 等
+    allow_headers=["*"],  # 允许所有请求头
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
