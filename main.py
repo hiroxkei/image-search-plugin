@@ -102,8 +102,14 @@ def upload_to_imgbb(image_bytes, imgbb_api_key):
     raise Exception("上传失败，请检查响应内容")
 
 @app.get("/get_image_url")
-def get_image_url(product: str = Query(..., description="商品或关键词"), imgbb_key: str = Query(..., description="在 imgbb 获取你的 API key")):
+def get_image_url(product: str = Query(..., description="商品或关键词"), imgbb_key: str = Query(None, description="在 imgbb 获取你的 API key")):
     try:
+         # 如果请求参数中没有提供 imgbb_key，则从环境变量中读取
+        if not imgbb_key:
+            imgbb_key = os.getenv("imgbb_key")
+            if not imgbb_key:
+                raise ValueError("未提供 imgbb API 密钥，且环境变量中未设置 IMGBB_API_KEY")
+                
         image_url = search_image_url(product)
         image_bytes = download_image(image_url)
         final_url = upload_to_imgbb(image_bytes, imgbb_key)
