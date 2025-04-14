@@ -123,6 +123,20 @@ def custom_openapi():
     openapi_schema["servers"] = [
         {"url": "https://image-search-plugin.onrender.com"}
     ]
+    # ✅ 补全 get_image_url 的响应结构
+    if "/get_image_url" in openapi_schema["paths"]:
+        get_op = openapi_schema["paths"]["/get_image_url"]["get"]
+        if "responses" in get_op and "200" in get_op["responses"]:
+            get_op["responses"]["200"]["content"]["application/json"]["schema"] = {
+                "type": "object",
+                "properties": {
+                    "status": { "type": "string" },
+                    "product": { "type": "string" },
+                    "url": { "type": "string", "format": "uri" },
+                    "markdown_embed": { "type": "string" }
+                }
+            }
+            
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 
