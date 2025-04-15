@@ -38,7 +38,7 @@ def plugin_manifest():
 
 def is_supported_image_format(content_type):
     """判断图片类型是否支持"""
-    return any(fmt in content_type for fmt in ["jpg", "png"])
+    return any(fmt in content_type for fmt in ["jpeg", "jpg", "png"])
 
 def search_image_url(query):
     """提取 Bing 上第一个符合要求的图片 URL（仅限 jpeg/jpg/png）"""
