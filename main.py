@@ -16,7 +16,7 @@ app = FastAPI(
     title="Image Search & Upload API",
     description="Search image from Bing and upload to imgbb",
     version="1.0",
-    openapi_version="3.0.1",
+    openapi_version="3.1.0",
     servers=[
         {"url": "https://image-search-plugin.onrender.com"}
     ]
@@ -134,7 +134,7 @@ def custom_openapi():
         routes=app.routes,
     )
     # 强制设定 OpenAPI 版本 & servers 字段
-    openapi_schema["openapi"] = "3.0.1"
+    openapi_schema["openapi"] = "3.1.0"
     openapi_schema["servers"] = [
         {"url": "https://image-search-plugin.onrender.com"}
     ]
