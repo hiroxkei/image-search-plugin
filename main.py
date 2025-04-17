@@ -45,14 +45,20 @@ def search_image_url(query):
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36 Edg/135.0.0.0",
         "Referer": "https://www.bing.com/",
-        "Cookie":(
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+        "Cookie": (
             "MUID=3F8E0A9495E065001ADE1FD29464649B; "
-            "_EDGE_V=1; "
+            "ANON=A=C1466B969998C3B675A54C36FFFFFFFF&E=1e8a&W=1; "
+            "SRCHUID=V=2&GUID=B15266CB168A45819FA6ADF106485126&dmnchg=1; "
             "SRCHUSR=DOB=20241129&T=1743509671000&POEX=W&DS=1; "
+            "SRCHD=AF=NOFORM; "
+            "_EDGE_V=1; "
+            "_EDGE_S=SID=256959450C856AD1367F4C940D576B0A&mkt=zh-hk; "
             "_SS=SID=2CF57D8A79E862760AD5684478AB63B9&PC=NMTS&R=398&RB=398&GB=0&RG=0&RP=398; "
-            "SRCHD=AF=NOFORM"
-            )
+            "USRLOC=HS=1&ELOC=LAT=39.10505676269531|LON=117.1767578125|N=%E5%8D%97%E5%BC%80%E5%8C%BA%EF%BC%8C%E5%A4%A9%E6%B4%A5%E5%B8%82|ELT=2|&CLOC=LAT=39.10505549307363|LON=117.17675500064105|A=733.4464586120832|TS=250417063042|SRC=W&BID=MjUwNDE3MTQzMDQxXzEzZTUzMmNjMzhiNDhhMGJkODMzNWE0M2UwMzRhODA1YWE2ZWFhMGMzYTRhMTBlOGNjZWE3MWNiNzEzNjI2MDA="
+        )
     }
+
     res = requests.get(f"https://www.bing.com/images/search?q={query}", headers=headers)
     soup = BeautifulSoup(res.text, "html.parser")
     items = soup.find_all("a", class_="iusc")
