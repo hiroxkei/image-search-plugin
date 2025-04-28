@@ -63,7 +63,7 @@ def search_image_url(query):
     soup = BeautifulSoup(res.text, "html.parser")
     items = soup.find_all("a", class_="iusc")
 
-    for item in items[:10]:
+    for item in items[:20]:
         try:
             metadata = json.loads(item.get("m"))
             image_url = metadata.get("murl")
