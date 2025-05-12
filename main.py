@@ -94,47 +94,38 @@ def download_image(image_url):
     raise Exception("图片下载失败或内容格式不对")
 
 
-def upload_to_imgur(image_bytes, imgur_client_id):
-    """将图片上传到 Imgur 并返回图片 URL"""
-    headers = {
-        "Authorization": f"Client-ID {imgur_client_id}"
+def upload_to_imgbb(image_bytes, imgbb_api_key):
+    """将图片上传至 imgbb 并返回图片 URL"""
+    image_base64 = base64.b64encode(image_bytes).decode("utf-8")
+    payload = {
+        "key": imgbb_api_key,
+        "image": image_base64
     }
-    files = {
-        "image": image_bytes
-    }
-    response = requests.post("https://api.imgur.com/3/image", headers=headers, files=files)
-    json_data = response.json()
-
-    if response.status_code == 200 and json_data.get("success"):
-        return json_data["data"]["link"]
-    else:
-        raise Exception(f"上传失败，状态码: {response.status_code}，响应信息: {json_data}")
-
+    res = requests.post("https://api.imgbb.com/1/upload", data=payload)
+    json_data = res.json()
+    if res.status_code == 200 and json_data.get("success") == True:
+        return json_data["data"]["url"]
+    raise Exception("上传失败，请检查响应内容")
 @app.get("/get_image_url")
-def get_image_url(
-    product: str = Query(..., description="商品或关键词"),
-    imgur_client_id: str = Query(None, description="在 Imgur 获取的 Client ID")
-):
+def get_image_url(product: str = Query(..., description="商品或关键词"), imgbb_key: str = Query(None, description="在 imgbb 获取你的 API key")):
     try:
-        if not imgur_client_id:
-            imgur_client_id = os.getenv("IMGUR_CLIENT_ID")
-            if not imgur_client_id:
-                raise ValueError("未提供 Imgur Client ID，且环境变量中未设置 IMGUR_CLIENT_ID")
+         # 如果请求参数中没有提供 imgbb_key，则从环境变量中读取
+        if not imgbb_key:
+            imgbb_key = os.getenv("IMGBB_API_KEY")
+            if not imgbb_key:
+                raise ValueError("未提供 imgbb API 密钥，且环境变量中未设置 IMGBB_API_KEY")
 
         image_url = search_image_url(product)
         image_bytes = download_image(image_url)
-        final_url = upload_to_imgur(image_bytes, imgur_client_id)
-
+        final_url = upload_to_imgbb(image_bytes, imgbb_key)
         return JSONResponse(content={
             "status": "success",
             "product": product,
             "url": final_url,
             "markdown_embed": f"![{product}]({final_url})"
         })
-
     except Exception as e:
         return JSONResponse(status_code=500, content={"status": "error", "message": str(e)})
-
 
 from fastapi.openapi.utils import get_openapi
 
